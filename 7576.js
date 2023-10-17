@@ -47,11 +47,16 @@ const [n, ...input] = require('fs')
 
 function solution(n, m, box) {
   const queue = new Queue();
+
   let min = 0;
   const dx = [0, 0, 1, -1];
   const dy = [1, -1, 0, 0];
+
+  //안 익은 토마토 개수
   let allCnt = 0;
 
+  //박스를 돌면서 익은 토마토들 위치 구하기
+  //안 익은 토마토 개수도 체크
   box.forEach((row, rIdx) => {
     row.forEach((col, cIdx) => {
       if (col === 1) {
@@ -62,10 +67,13 @@ function solution(n, m, box) {
     });
   });
 
+  //익은 토마토가 없으면 return -1
   if (queue.size === 0) return -1;
 
   while (queue.size) {
+    //r=row idx, c= column idx, cnt=지금 토마토가 익는데 걸리는 날짜
     const [r, c, cnt] = queue.dequeue();
+
     min = Math.max(cnt, min);
 
     for (let i = 0; i < 4; i++) {
@@ -76,6 +84,8 @@ function solution(n, m, box) {
         c + dx[i] < n &&
         box[r + dy[i]][c + dx[i]] === 0
       ) {
+        //안 익은 토마토 개수 --;
+        //안 익은 토마토는 큐에 넣고 1++;
         allCnt--;
         box[r + dy[i]][c + dx[i]] = 1;
         queue.enqueue([r + dy[i], c + dx[i], cnt + 1]);
@@ -83,6 +93,7 @@ function solution(n, m, box) {
     }
   }
 
+  //안 익은 토마토가 없을 경우,
   return allCnt === 0 ? min : -1;
 }
 
