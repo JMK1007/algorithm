@@ -22,7 +22,7 @@ function solution(n, m, maze) {
   const dy = [1, -1, 0, 0];
   let max = 0;
 
-  //[row, col, count];
+  //[row, col, count=이동한 거리];
   queue.push([0, 0, 1]);
 
   while (queue.length) {
@@ -41,6 +41,7 @@ function solution(n, m, maze) {
         maze[row + dy[i]][col + dx[i]]
       ) {
         queue.push([row + dy[i], col + dx[i], count + 1]);
+        //방문한 곳은 0으로
         maze[row + dy[i]][col + dx[i]] = 0;
       }
     }
