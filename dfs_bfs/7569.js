@@ -56,6 +56,8 @@ const [n, ...input] = require('fs')
   .split('\n');
 
 function solution(M, N, H, box) {
+  //BFS!!!
+
   const boxes = [];
   const queue = new Queue();
 
@@ -65,6 +67,7 @@ function solution(M, N, H, box) {
   let max = 0;
   let tomatoes = 0;
 
+  //박스 3차원 배열로 초기화
   for (let i = 0; i < H; i++) {
     const tmp = [];
     for (let j = 0; j < N; j++) {
@@ -73,10 +76,14 @@ function solution(M, N, H, box) {
     boxes.push(tmp);
   }
 
+  //3차원 배열 돌면서 익은 토마토는 큐에 넣기
+  //안 익은 토마토 개수 세기
   for (let i = 0; i < H; i++) {
     for (let j = 0; j < N; j++) {
       for (let k = 0; k < M; k++) {
         if (boxes[i][j][k] === 1) {
+          //큐에는 토마토가 담긴 박스 정보 H, N, M와
+          //해당 토마토가 익기까지 필요한 최소 일자를 넣어줌
           queue.enqueue([i, j, k, 0]);
         } else if (boxes[i][j][k] === 0) {
           tomatoes++;
@@ -85,12 +92,16 @@ function solution(M, N, H, box) {
     }
   }
 
+  //큐가 빌 때까지 반복
   while (queue.size) {
     const val = queue.dequeue();
 
+    //토마토 위치 H, R, C, 최소 일자
     const [h, r, c, cnt] = val;
     max = Math.max(max, cnt);
 
+    //위아래 확인
+    //익은 토마토와 인접하고 아직 안 익은 토마토만 큐에 넣어줌
     for (let i = 0; i < 2; i++) {
       if (h + dh[i] >= 0 && h + dh[i] < H && boxes[h + dh[i]][r][c] === 0) {
         boxes[h + dh[i]][r][c] = 1;
@@ -99,6 +110,8 @@ function solution(M, N, H, box) {
       }
     }
 
+    //상하좌우 확인
+    //익은 토마토와 인접하고 아직 안 익은 토마토만 큐에 넣어줌
     for (let j = 0; j < 4; j++) {
       if (
         r + dr[j] >= 0 &&
@@ -114,6 +127,7 @@ function solution(M, N, H, box) {
     }
   }
 
+  //안 익은 토마토가 남아있으면 -1, 아니면 일자 출력
   return tomatoes > 0 ? -1 : max;
 }
 

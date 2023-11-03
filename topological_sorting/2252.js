@@ -65,10 +65,13 @@ function solution(N, M, list) {
   list.forEach(([v1, v2]) => {
     if (!adj[v2]) adj[v2] = [];
 
+    //그래프 연결리스트 만들고
+    //indegree 배열 채우기
     adj[v2].push(v1);
     indegree[v1]++;
   });
 
+  //indegree 0인 정점들 큐에 넣기
   indegree.forEach((v, idx) => {
     if (idx !== 0 && v === 0) {
       queue.enqueue(idx);
@@ -79,10 +82,12 @@ function solution(N, M, list) {
   while (queue.length) {
     const v = queue.dequeue();
 
+    //모든 정점들의 indegree 값 -1
     adj[v]?.forEach((v2) => {
       if (indegree[v2] !== 0) {
         indegree[v2]--;
 
+        //indegree값이 0이라면 큐에 넣어줌
         if (indegree[v2] === 0) {
           result.push(v2);
           queue.enqueue(v2);
